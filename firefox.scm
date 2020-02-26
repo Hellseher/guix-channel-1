@@ -66,7 +66,7 @@
        (method url-fetch)
        (uri
         (string-append
-         "https://ftp.mozilla.org/pub/firefox/releases/"
+         "https://sftp.mozilla.org/pub/firefox/releases/"
          version "/source/"
          "firefox-" version ".source.tar.xz"))
        (sha256
@@ -124,12 +124,12 @@
      ;; a tarball suitable for compilation on any system that Firefox supports.
      ;; (Bug fixes and security fixes, however, should go in 'source').
      ;; They are commented out because they fail
-     `(("firefox-avoid-bundled-libraries.patch"
-        "./icecat-avoid-bundled-libraries.patch")
-       ("firefox-use-system-graphite2+harfbuzz.patch"
-        "./icecat-use-system-graphite2+harfbuzz.patch")
-       ("firef0x-use-system-media-libs.patch"
-        "./icecat-use-system-media-libs.patch")
+     `(;; ("firefox-avoid-bundled-libraries.patch"
+       ;;  "./icecat-avoid-bundled-libraries.patch")
+       ;; ("firefox-use-system-graphite2+harfbuzz.patch"
+       ;;  "./icecat-use-system-graphite2+harfbuzz.patch")
+       ;; ("firef0x-use-system-media-libs.patch"
+       ;;  "./icecat-use-system-media-libs.patch")
        ("patch" ,(canonical-package patch))
 
        ("autoconf" ,autoconf-2.13)
@@ -199,11 +199,11 @@
                            "--with-system-zlib"
                            "--with-system-bz2"
                            "--with-system-jpeg"        ; must be libjpeg-turbo
-                           "--with-system-libevent"
-                           "--with-system-ogg"
-                           "--with-system-vorbis"
+                           ;; "--with-system-libevent"
+                           ;; "--with-system-ogg"
+                           ;; "--with-system-vorbis"
                            ;; "--with-system-theora" ; wants theora-1.2, not yet released
-                           "--with-system-libvpx"
+                           ;; "--with-system-libvpx"
                            "--with-system-icu"
                            
                            ;; See <https://bugs.gnu.org/32833>
@@ -212,12 +212,12 @@
                            ;; UNBUNDLE-ME! "--with-system-nspr"
                            ;; UNBUNDLE-ME! "--with-system-nss"
                            
-                           "--with-system-harfbuzz"
-                           "--with-system-graphite2"
+                           ;; "--with-system-harfbuzz"
+                           ;; "--with-system-graphite2"
                            "--enable-system-pixman"
                            "--enable-system-ffi"
-                           "--enable-system-hunspell"
-                           "--enable-system-sqlite"
+                           ;; "--enable-system-hunspell"
+                           ;; "--enable-system-sqlite"
 
                            ;; Fails with "--with-system-png won't work because
                            ;; the system's libpng doesn't have APNG support".
@@ -356,11 +356,10 @@
              ;; that the <cstddef> and "c++config.h" headers cannot be found.
              ;; Note that the 'build' keyword argument contains the GNU
              ;; triplet, e.g. "x86_64-unknown-linux-gnu".
-             (let ((gcc (assoc-ref inputs "gcc-toolchain")))
+             (let ((gcc (assoc-ref inputs "gcc")))
                (setenv "CPLUS_INCLUDE_PATH"
                        (string-append gcc "/include/c++" ":"
-                                      gcc "/include/c++/" build ":"
-                                      (getenv "CPLUS_INCLUDE_PATH"))))
+                                      gcc "/include/c++/" build)))
              #t))
          (replace 'configure
            ;; configure does not work followed by both "SHELL=..." and
